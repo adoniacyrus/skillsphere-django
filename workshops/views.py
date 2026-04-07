@@ -2,7 +2,7 @@ from django.shortcuts import render
 from rest_framework import generics, permissions
 from .models import Workshop
 from .serializers import WorkshopSerializer
-
+from .permissions import IsOrganizerOrReadOnly
 
 class WorkshopListCreateView(generics.ListCreateAPIView):
     queryset = Workshop.objects.all()
@@ -11,3 +11,14 @@ class WorkshopListCreateView(generics.ListCreateAPIView):
 
     def perform_create(self, serializer):
         serializer.save(organizer=self.request.user)
+
+class WorkshopListCreateView(generics.ListCreateAPIView):
+    queryset = Workshop.objects.all()
+    serializer_class = WorkshopSerializer
+    permission_classes = [IsOrganizerOrReadOnly]
+
+    def perform_create(self, serializer):
+        serializer.save(organizer=self.request.user)
+
+
+
