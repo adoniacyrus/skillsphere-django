@@ -6,11 +6,11 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id', 'username', 'email', 'password','role']
+        fields = ['id', 'username', 'email', 'password', 'role']
 
-        def create(self, validated_data):
-            password = validated_data.pop('password')
-            user = User(**validated_data)
-            user.set_password(password)  # 🔐 hashes password
-            user.save()
-            return user
+    def create(self, validated_data):   # ✅ CORRECT POSITION
+        password = validated_data.pop('password')
+        user = User(**validated_data)
+        user.set_password(password)
+        user.save()
+        return user
