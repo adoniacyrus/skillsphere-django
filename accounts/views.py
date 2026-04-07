@@ -1,8 +1,10 @@
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from .serializers import UserSerializer
+from rest_framework.permissions import IsAuthenticated
+
 
 class RegisterUserView(APIView):
     def post(self, request):
@@ -19,12 +21,7 @@ class LoginUserView(APIView):
         username = request.data.get('username')
         password = request.data.get('password')
 
-        print("USERNAME:", username)
-        print("PASSWORD:", password)
-
         user = authenticate(username=username, password=password)
-
-        print("AUTH USER:", user)
 
         if user is not None:
             login(request, user)  # 🔥 creates session
@@ -37,3 +34,21 @@ class LoginUserView(APIView):
         return Response({
             "error": "Invalid credentials"
         }, status=status.HTTP_401_UNAUTHORIZED)
+    
+class CurrentUserView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+
+        return Response({
+            "id": user.id,
+            "username": user.username,
+            "email": user.email,
+            "role": user.role
+        })
+    
+class LogoutUserView(APIView):
+    def post(self, request):
+        logout(request)
+        return Response({"message": "Logged out successfully"})
