@@ -1,6 +1,7 @@
 from django.db import models
 from accounts.models import User
 from workshops.models import Workshop
+from django.core.exceptions import ValidationError
 
 class Booking(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -12,8 +13,16 @@ class Booking(models.Model):
     booked_at = models.DateTimeField(auto_now_add=True)
 
     def save(self, *args, **kwargs):
-        # Calculate total price automatically
+        if self.seats_booked > self.workshop.seats_available:
+            raise ValidationError("Not enough seats available")
+
+        # Reduce available seats
+        self.workshop.seats_available -= self.seats_booked
+        self.workshop.save()
+
+        # Calculate total price
         self.total_price = self.seats_booked * self.workshop.price
+
         super().save(*args, **kwargs)
 
     def __str__(self):
