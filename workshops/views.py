@@ -1,8 +1,10 @@
 from django.shortcuts import render
-from rest_framework import generics, permissions
+from rest_framework import generics, permissions, status
+from rest_framework.response import Response
 from .models import Workshop
 from .serializers import WorkshopSerializer
-from .permissions import IsOrganizerOrReadOnly
+from .permissions import IsOrganizerOrReadOnly, IsAdminUserCustom
+
 
 class WorkshopListCreateView(generics.ListCreateAPIView):
     queryset = Workshop.objects.all()
@@ -33,3 +35,13 @@ class WorkshopDetailView(generics.RetrieveAPIView):
     serializer_class = WorkshopSerializer
     permission_classes = [permissions.IsAuthenticated]
 
+class WorkshopApproveView(generics.UpdateAPIView):
+    queryset = Workshop.objects.all()
+    serializer_class = WorkshopSerializer
+    permission_classes = [IsAdminUserCustom]
+
+    def patch(self, request, *args, **kwargs):
+        workshop = self.get_object()
+        workshop.is_approved = True
+        workshop.save()
+        return Response({"message": "Workshop approved"}, status=status.HTTP_200_OK)

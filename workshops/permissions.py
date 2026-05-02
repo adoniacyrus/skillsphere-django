@@ -9,3 +9,7 @@ class IsOrganizerOrReadOnly(permissions.BasePermission):
 
         # Allow POST only if user is an organizer
         return request.user.role == 'organizer'
+    
+class IsAdminUserCustom(permissions.BasePermission):
+    def has_permission(self, request, view):
+        return request.user.role == 'admin'
