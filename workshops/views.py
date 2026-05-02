@@ -17,7 +17,7 @@ class WorkshopListCreateView(generics.ListCreateAPIView):
     permission_classes = [IsOrganizerOrReadOnly]
 
     def get_queryset(self):
-        queryset = Workshop.objects.all()
+        queryset = Workshop.objects.filter(is_approved=True)
         city_id = self.request.query_params.get('city')
 
         if city_id:
