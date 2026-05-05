@@ -15,11 +15,27 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, re_path
+from django.http import FileResponse, Http404
+from django.conf import settings
+import os
+
+def frontend_serve(request, path=''):
+    if not path:
+        path = 'index.html'
+    
+    file_path = os.path.join(settings.BASE_DIR, 'frontend', path)
+    if os.path.exists(file_path) and os.path.isfile(file_path):
+        return FileResponse(open(file_path, 'rb'))
+    raise Http404("Frontend file not found")
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/accounts/', include('accounts.urls')),
     path('api/workshops/', include('workshops.urls')),
     path('api/bookings/', include('bookings.urls')),
+    path('api/', include('core.urls')),
+    
+    # Catch-all to serve frontend HTML/JS/CSS directly
+    re_path(r'^(?P<path>.*)$', frontend_serve),
 ]
