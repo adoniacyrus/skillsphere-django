@@ -109,6 +109,39 @@ $(document).ready(function() {
         });
     });
 
+    // Edit Profile Modal Open
+    $('#editProfileModal').on('show.bs.modal', function () {
+        const currentUsername = $('#welcomeMessage').text().replace('Welcome, ', '');
+        const currentEmail = $('#userInfoText').text().replace('Email: ', '');
+        $('#editUsername').val(currentUsername);
+        $('#editEmail').val(currentEmail);
+        $('#editProfileAlert').addClass('d-none');
+    });
+
+    // Submit Edit Profile
+    $('#editProfileForm').submit(function(e) {
+        e.preventDefault();
+        
+        // Frontend mock logic since there is no PUT endpoint
+        const newUsername = $('#editUsername').val();
+        const newEmail = $('#editEmail').val();
+        
+        $('#saveProfileBtn').prop('disabled', true).html('<span class="spinner-border spinner-border-sm me-2"></span>Saving...');
+        
+        // Simulate network delay
+        setTimeout(() => {
+            $('#welcomeMessage').text(`Welcome, ${newUsername}`);
+            $('#userInfoText').text(`Email: ${newEmail}`);
+            showAlert('editProfileAlert', 'Profile updated successfully!', 'success');
+            
+            setTimeout(() => {
+                $('#editProfileModal').modal('hide');
+                $('#saveProfileBtn').prop('disabled', false).html('<i data-lucide="save" style="width: 20px; height: 20px;"></i> Save Changes');
+                lucide.createIcons();
+            }, 1500);
+        }, 1000);
+    });
+
 });
 
 // --- Functions ---
@@ -261,7 +294,7 @@ function loadMyBookings() {
                                     <h5 class="fw-bold text-dark">Booking #${b.id}</h5>
                                     <span class="badge bg-success rounded-pill">Confirmed</span>
                                 </div>
-                                <p class="mb-1"><strong>Workshop ID:</strong> ${b.workshop}</p>
+                                <p class="mb-1"><strong>Workshop Title:</strong> ${b.workshop_title || b.workshop}</p>
                                 <p class="mb-1"><strong>Seats Booked:</strong> ${b.seats_booked}</p>
                                 <p class="mb-1"><strong>Total Paid:</strong> ₹${b.total_price}</p>
                                 <p class="mb-2 text-muted small">Booked on: ${dateStr}</p>

@@ -6,106 +6,204 @@
     <title>Admin Dashboard - SkillSphere</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Custom Styles -->
     <link rel="stylesheet" href="css/styles.css">
+    <style>
+        .admin-theme { --primary-indigo: #0F172A; --primary-indigo-hover: #1E293B; }
+    </style>
 </head>
-<body>
+<body class="bg-light admin-theme">
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-danger sticky-top shadow-sm">
-        <div class="container">
-            <a class="navbar-brand fw-bold text-white" href="#"><i class="bi bi-shield-lock me-2"></i>SkillSphere Admin</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top shadow-sm py-3 z-3">
+        <div class="container-fluid px-4">
+            <a class="navbar-brand fw-bold fs-4 brand-font text-white d-flex align-items-center gap-2" href="#">
+                <i data-lucide="shield-check" class="text-white" style="width: 28px; height: 28px;"></i>
+                SkillSphere <span class="badge bg-danger fs-6 ms-2 rounded-pill">Admin</span>
+            </a>
+            
+            <!-- Mobile Menu Toggle -->
+            <button class="navbar-toggler border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileSidebar">
+                <i data-lucide="menu" class="text-white"></i>
             </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item"><a class="nav-link active" href="#" id="navUsers">Users</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#" id="navWorkshops">Workshops</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#" id="navCities">Cities</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#" id="navBookings">Bookings</a></li>
-                </ul>
-                <div class="d-flex align-items-center">
-                    <span class="text-light me-3" id="welcomeMessage">Welcome, Admin</span>
-                    <button class="btn btn-outline-light btn-sm" id="logoutBtn">Logout</button>
-                </div>
+            
+            <div class="d-none d-md-flex align-items-center gap-3">
+                <span class="text-light fw-medium" id="welcomeMessage">Welcome, Admin</span>
+                <button class="btn btn-outline-light btn-sm rounded-pill px-4" id="logoutBtn">Logout</button>
             </div>
         </div>
     </nav>
 
-    <div class="container mt-4">
-        <!-- Removed API Limitation Notice as backend was updated -->
+    <!-- Mobile Sidebar (Offcanvas) -->
+    <div class="offcanvas offcanvas-start bg-white" tabindex="-1" id="mobileSidebar">
+        <div class="offcanvas-header border-bottom">
+            <h5 class="offcanvas-title fw-bold brand-font text-dark">Admin Menu</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <ul class="nav flex-column gap-2">
+                <li class="nav-item">
+                    <a class="nav-link active rounded text-dark fw-medium p-3 d-flex align-items-center gap-3 bg-light" href="#" id="navUsersMobile" data-bs-dismiss="offcanvas">
+                        <i data-lucide="users" class="text-primary"></i> Users
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link rounded text-muted fw-medium p-3 d-flex align-items-center gap-3 hover-bg-light" href="#" id="navWorkshopsMobile" data-bs-dismiss="offcanvas">
+                        <i data-lucide="layers" class="text-secondary"></i> Workshops
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link rounded text-muted fw-medium p-3 d-flex align-items-center gap-3 hover-bg-light" href="#" id="navCitiesMobile" data-bs-dismiss="offcanvas">
+                        <i data-lucide="map-pin" class="text-secondary"></i> Cities
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link rounded text-muted fw-medium p-3 d-flex align-items-center gap-3 hover-bg-light" href="#" id="navBookingsMobile" data-bs-dismiss="offcanvas">
+                        <i data-lucide="calendar" class="text-secondary"></i> Bookings
+                    </a>
+                </li>
+                <li class="nav-item mt-4 pt-4 border-top">
+                    <button class="btn btn-outline-danger w-100 rounded-pill d-flex align-items-center justify-content-center gap-2" id="logoutBtnMobile">
+                        <i data-lucide="log-out"></i> Logout
+                    </button>
+                </li>
+            </ul>
+        </div>
+    </div>
 
-        <!-- USERS VIEW -->
-        <div id="usersView">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h3 class="fw-bold mb-0">Manage Users</h3>
-                <select id="userRoleFilter" class="form-select w-auto rounded-pill shadow-sm">
-                    <option value="">All Roles</option>
-                    <option value="admin">Admin</option>
-                    <option value="organizer">Organizer</option>
-                    <option value="user">Attendee</option>
-                </select>
-            </div>
-            <div class="row" id="adminUsersList">
-                <div class="col-12 text-center py-5">
-                    <div class="spinner-border text-danger" role="status"></div>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Desktop Sidebar -->
+            <div class="col-md-3 col-lg-2 p-0 sidebar bg-white d-none d-md-block shadow-sm">
+                <div class="p-4">
+                    <p class="text-muted small fw-bold text-uppercase mb-3" style="letter-spacing: 1px;">Administration</p>
+                    <ul class="nav flex-column gap-2">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="#" id="navUsers">
+                                <i data-lucide="users" style="width: 20px; height: 20px;"></i> Users
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" id="navWorkshops">
+                                <i data-lucide="layers" style="width: 20px; height: 20px;"></i> Workshops
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" id="navCities">
+                                <i data-lucide="map-pin" style="width: 20px; height: 20px;"></i> Cities
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" id="navBookings">
+                                <i data-lucide="calendar" style="width: 20px; height: 20px;"></i> Bookings
+                            </a>
+                        </li>
+                    </ul>
                 </div>
             </div>
-        </div>
+            
+            <!-- Main Content -->
+            <div class="col-md-9 col-lg-10 p-4 p-lg-5">
+                <!-- Dashboard Alert -->
+                <div id="dashboardAlert" class="alert d-none rounded-3 shadow-sm border-0" role="alert"></div>
 
-        <!-- WORKSHOPS VIEW -->
-        <div id="workshopsView" class="d-none">
-            <h3 class="fw-bold mb-4">Manage Workshops</h3>
-            <div class="row" id="adminWorkshopsList">
-                <div class="col-12 text-center py-5">
-                    <div class="spinner-border text-danger" role="status"></div>
+
+                <!-- USERS VIEW -->
+                <div id="usersView" class="fade-in-up delay-1">
+                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-end mb-4 gap-3">
+                        <div>
+                            <h3 class="fw-bold brand-font mb-1">Manage Users</h3>
+                            <p class="text-muted mb-0">View and manage all registered users.</p>
+                        </div>
+                        <select id="userRoleFilter" class="form-select w-auto rounded-pill shadow-sm bg-white">
+                            <option value="">All Roles</option>
+                            <option value="admin">Admin</option>
+                            <option value="organizer">Organizer</option>
+                            <option value="user">Attendee</option>
+                        </select>
+                    </div>
+                    <div class="card shadow-soft border-0 rounded-4 overflow-hidden bg-white p-2">
+                        <div class="row" id="adminUsersList">
+                            <div class="col-12 text-center py-5">
+                                <div class="spinner-border text-dark" role="status"></div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
 
-        <!-- CITIES VIEW -->
-        <div id="citiesView" class="d-none">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h3 class="fw-bold mb-0">Manage Cities</h3>
-                <button class="btn btn-danger rounded-pill px-4" data-bs-toggle="modal" data-bs-target="#addCityModal">
-                    <i class="bi bi-plus-circle"></i> Add City
-                </button>
-            </div>
-            <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
-                <ul class="list-group list-group-flush" id="citiesList">
-                    <div class="text-center py-5"><div class="spinner-border text-danger" role="status"></div></div>
-                </ul>
-            </div>
-        </div>
-
-        <!-- BOOKINGS VIEW -->
-        <div id="bookingsView" class="d-none">
-            <h3 class="fw-bold mb-4">Platform-Wide Bookings</h3>
-            <div class="row" id="adminBookingsList">
-                <div class="col-12 text-center py-5">
-                    <div class="spinner-border text-danger" role="status"></div>
+                <!-- WORKSHOPS VIEW -->
+                <div id="workshopsView" class="d-none fade-in-up">
+                    <div class="mb-4">
+                        <h3 class="fw-bold brand-font mb-1">Manage Workshops</h3>
+                        <p class="text-muted mb-0">Moderate platform workshops.</p>
+                    </div>
+                    <div class="card shadow-soft border-0 rounded-4 overflow-hidden bg-white p-2">
+                        <div class="row" id="adminWorkshopsList">
+                            <div class="col-12 text-center py-5">
+                                <div class="spinner-border text-dark" role="status"></div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+
+                <!-- CITIES VIEW -->
+                <div id="citiesView" class="d-none fade-in-up">
+                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-end mb-4 gap-3">
+                        <div>
+                            <h3 class="fw-bold brand-font mb-1">Manage Cities</h3>
+                            <p class="text-muted mb-0">Add or manage active cities.</p>
+                        </div>
+                        <button class="btn btn-dark rounded-pill px-4 shadow-sm d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#addCityModal">
+                            <i data-lucide="plus" style="width: 20px; height: 20px;"></i> Add City
+                        </button>
+                    </div>
+                    <div class="card border-0 shadow-soft rounded-4 overflow-hidden bg-white">
+                        <ul class="list-group list-group-flush" id="citiesList">
+                            <div class="text-center py-5"><div class="spinner-border text-dark" role="status"></div></div>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- BOOKINGS VIEW -->
+                <div id="bookingsView" class="d-none fade-in-up">
+                    <div class="mb-4">
+                        <h3 class="fw-bold brand-font mb-1">Platform-Wide Bookings</h3>
+                        <p class="text-muted mb-0">View all bookings across the platform.</p>
+                    </div>
+                    <div class="card shadow-soft border-0 rounded-4 overflow-hidden bg-white p-2">
+                        <div class="row" id="adminBookingsList">
+                            <div class="col-12 text-center py-5">
+                                <div class="spinner-border text-dark" role="status"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
-
     </div>
 
     <!-- Add City Modal -->
     <div class="modal fade" id="addCityModal" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content rounded-4 border-0 shadow">
-                <div class="modal-header border-bottom-0">
-                    <h5 class="modal-title fw-bold">Add New City</h5>
+            <div class="modal-content rounded-4 border-0 shadow-lg">
+                <div class="modal-header border-bottom px-4 py-3 bg-light rounded-top-4">
+                    <h5 class="modal-title fw-bold brand-font text-dark d-flex align-items-center gap-2">
+                        <i data-lucide="map-pin" class="text-primary"></i> Add New City
+                    </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
-                <div class="modal-body">
-                    <div id="addCityAlert" class="alert d-none"></div>
+                <div class="modal-body p-4">
+                    <div id="addCityAlert" class="alert d-none rounded-3"></div>
                     <form id="addCityForm">
-                        <div class="mb-3">
-                            <label class="form-label fw-semibold">City Name</label>
-                            <input type="text" class="form-control" id="cityName" required>
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold text-dark">City Name</label>
+                            <input type="text" class="form-control bg-light" id="cityName" placeholder="E.g. Mumbai" required>
                         </div>
-                        <button type="submit" class="btn btn-danger w-100 rounded-pill py-2" id="addCityBtn">Add City</button>
+                        <button type="submit" class="btn btn-dark w-100 rounded-pill py-3 fw-bold shadow-sm d-flex align-items-center justify-content-center gap-2" id="addCityBtn">
+                            <i data-lucide="plus"></i> Add City
+                        </button>
                     </form>
                 </div>
             </div>
@@ -118,5 +216,39 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="js/auth.js"></script>
     <script src="js/admin.js"></script>
+    
+    <!-- Initialize Lucide Icons -->
+    <script>
+        lucide.createIcons();
+        
+        // Setup mobile sidebar links
+        $(document).ready(function() {
+            const navIds = ['navUsers', 'navWorkshops', 'navCities', 'navBookings'];
+            
+            navIds.forEach(id => {
+                $(`#${id}Mobile`).click(function(e) {
+                    e.preventDefault();
+                    $(`#${id}`).click();
+                    
+                    // Reset all mobile links
+                    navIds.forEach(nid => {
+                        $(`#${nid}Mobile`).removeClass('active bg-light text-dark').addClass('text-muted hover-bg-light');
+                    });
+                    
+                    // Activate clicked
+                    $(this).addClass('active bg-light text-dark').removeClass('text-muted hover-bg-light');
+                });
+            });
+            
+            $('#logoutBtnMobile').click(function() {
+                $('#logoutBtn').click();
+            });
+            
+            // Try to set stats values slightly after loading if elements exist
+            setTimeout(() => {
+                if($('#adminUsersList .card').length > 0) $('#statTotalUsers').text($('#adminUsersList .card').length);
+            }, 2000);
+        });
+    </script>
 </body>
 </html>
