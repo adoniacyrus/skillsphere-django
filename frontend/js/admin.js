@@ -259,7 +259,8 @@ function loadBookings() {
                                     <tr>
                                         <th>Booking ID</th>
                                         <th>Workshop ID</th>
-                                        <th>User ID</th>
+                                        <th>Workshop Title</th>
+                                        <th>User Email</th>
                                         <th>Seats Booked</th>
                                         <th>Total Paid</th>
                                         <th>Date</th>
@@ -274,7 +275,8 @@ function loadBookings() {
                     <tr>
                         <td><span class="fw-bold text-danger">#${b.id}</span></td>
                         <td>${b.workshop}</td>
-                        <td>${b.user}</td>
+                        <td class="fw-medium">${b.workshop_title || 'N/A'}</td>
+                        <td>${b.user_email || 'N/A'}</td>
                         <td><span class="badge bg-secondary rounded-pill">${b.seats_booked}</span></td>
                         <td class="text-success fw-semibold">₹${b.total_price}</td>
                         <td class="text-muted small">${dateStr}</td>

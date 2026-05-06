@@ -4,6 +4,11 @@ from .models import City
 from .serializers import CitySerializer
 from core.permissions import IsAdminRole
 
+from django.shortcuts import render
+
+def home(request):
+    return render(request, 'index.html')
+
 class CityListView(ListCreateAPIView):
     serializer_class = CitySerializer
 

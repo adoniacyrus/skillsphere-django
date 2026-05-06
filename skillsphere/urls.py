@@ -19,6 +19,9 @@ from django.urls import path, include, re_path
 from django.http import FileResponse, Http404
 from django.conf import settings
 import os
+from core.views import home
+
+
 
 def frontend_serve(request, path=''):
     if not path:
@@ -35,7 +38,7 @@ urlpatterns = [
     path('api/workshops/', include('workshops.urls')),
     path('api/bookings/', include('bookings.urls')),
     path('api/', include('core.urls')),
-    
+    path('', home),
     # Catch-all to serve frontend HTML/JS/CSS directly
     re_path(r'^(?P<path>.*)$', frontend_serve),
 ]
