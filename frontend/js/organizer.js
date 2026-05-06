@@ -208,6 +208,9 @@ function renderWorkshops(workshops) {
                             </div>
                         </div>
                         <div class="mt-3 text-end border-top pt-3">
+                            <button class="btn btn-outline-danger btn-sm delete-btn rounded-pill px-3 me-2" data-id="${ws.id}">
+                                <i class="bi bi-trash"></i> Delete
+                            </button>
                             <button class="btn btn-outline-secondary btn-sm edit-btn rounded-pill px-3" 
                                 data-id="${ws.id}" data-title="${ws.title}" data-desc="${ws.description}" 
                                 data-city="${ws.city}" data-date="${ws.date}" data-price="${ws.price}" 
@@ -241,6 +244,20 @@ function renderWorkshops(workshops) {
 
         $('#editAlert').addClass('d-none');
         $('#editWorkshopModal').modal('show');
+    });
+
+    $('.delete-btn').click(function() {
+        const id = $(this).data('id');
+        if (confirm('Are you sure you want to delete this workshop? This action cannot be undone.')) {
+            apiCall(`/workshops/${id}/`, 'DELETE')
+                .then(() => {
+                    showAlert('dashboardAlert', 'Workshop deleted successfully!', 'success');
+                    loadMyWorkshops();
+                })
+                .catch(err => {
+                    showAlert('dashboardAlert', `Failed to delete workshop: ${err}`, 'danger');
+                });
+        }
     });
 }
 

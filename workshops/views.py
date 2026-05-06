@@ -55,7 +55,7 @@ class WorkshopListCreateView(generics.ListCreateAPIView):
         serializer.save(organizer=self.request.user)
 
 
-class WorkshopDetailView(generics.RetrieveUpdateAPIView):
+class WorkshopDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Workshop.objects.all()
     serializer_class = WorkshopSerializer
     permission_classes = [permissions.IsAuthenticated, IsOwnerOrganizerOrReadOnly]
