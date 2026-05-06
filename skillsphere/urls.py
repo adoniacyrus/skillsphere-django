@@ -18,8 +18,8 @@ from django.contrib import admin
 from django.urls import path, include, re_path
 from django.http import FileResponse, Http404
 from django.conf import settings
+from django.conf.urls.static import static
 import os
-from core.views import home
 
 
 
@@ -38,7 +38,12 @@ urlpatterns = [
     path('api/workshops/', include('workshops.urls')),
     path('api/bookings/', include('bookings.urls')),
     path('api/', include('core.urls')),
-    path('', home),
+]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+urlpatterns += [
     # Catch-all to serve frontend HTML/JS/CSS directly
-    re_path(r'^(?P<path>.*)$', frontend_serve),
+    re_path(r'^(?!static/|media/|admin/|api/)(?P<path>.*)$', frontend_serve),
 ]

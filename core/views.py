@@ -4,11 +4,7 @@ from .models import City
 from .serializers import CitySerializer
 from core.permissions import IsAdminRole
 
-from django.shortcuts import render
-
-def home(request):
-    return render(request, 'index.html')
-
+from django.http import HttpResponse
 class CityListView(ListCreateAPIView):
     serializer_class = CitySerializer
 
